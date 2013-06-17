@@ -11,14 +11,7 @@ namespace SportsLeagues.Services
   {
     public void Initialise()
     {
-      //Mapper.CreateMap<League, LeagueDto>();
-
-      //Mapper.CreateMap<Season, SeasonDto>();
-
-      //Mapper.CreateMap<LeagueConfig, LeagueConfigDto>();
-
       Mapper.AssertConfigurationIsValid();
-
     }
   }
 }

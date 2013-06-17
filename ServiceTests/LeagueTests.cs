@@ -51,6 +51,7 @@ namespace ServiceTests
       lm.AddPlayers("youngr6", league.Id, players.Select(p => p.Id).ToArray());
       lm.CalculateNewSeason("youngr6", league.Id, new DateTime(2013, 6, 17));
 
+      Assert.IsTrue(true);
     }
   }
 }
