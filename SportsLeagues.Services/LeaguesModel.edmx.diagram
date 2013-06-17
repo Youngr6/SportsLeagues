@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="822ec35e98f2419f84dd56e916726947" Name="Diagram1">
+        <EntityTypeShape EntityType="LeaguesModel.Box" Width="1.5" PointX="4.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LeaguesModel.ContactDetail" Width="1.5" PointX="9.625" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LeaguesModel.Fixture" Width="1.5" PointX="4.75" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LeaguesModel.LeagueConfig" Width="1.5" PointX="0.75" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LeaguesModel.League" Width="1.5" PointX="2.875" PointY="0.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LeaguesModel.Player" Width="1.5" PointX="7.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LeaguesModel.Season" Width="1.5" PointX="2.875" PointY="3.25" IsExpanded="true" />
+        <AssociationConnector Association="LeaguesModel.FK_BoxFixture" ManuallyRouted="false" />
+        <AssociationConnector Association="LeaguesModel.FK_SeasonBox" ManuallyRouted="false" />
+        <AssociationConnector Association="LeaguesModel.FK_PlayerContactDetail" ManuallyRouted="false" />
+        <AssociationConnector Association="LeaguesModel.FK_AwayPlayers" ManuallyRouted="false" />
+        <AssociationConnector Association="LeaguesModel.FK_HomePlayers" ManuallyRouted="false" />
+        <AssociationConnector Association="LeaguesModel.FK_LeagueConfigSeason" ManuallyRouted="false" />
+        <AssociationConnector Association="LeaguesModel.FK_LeagueLeagueConfig" ManuallyRouted="false" />
+        <AssociationConnector Association="LeaguesModel.FK_LeagueSeason" ManuallyRouted="false" />
+        <AssociationConnector Association="LeaguesModel.LeaguePlayer" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
