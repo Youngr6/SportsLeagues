@@ -18,6 +18,7 @@ namespace SportsLeagues.Interfaces
         {
             this.Seasons = new HashSet<Season>();
             this.Leagues = new HashSet<League>();
+            this.Courts = new HashSet<Court>();
         }
     
         public System.Guid Id { get; set; }
@@ -27,5 +28,6 @@ namespace SportsLeagues.Interfaces
     
         public virtual ICollection<Season> Seasons { get; set; }
         public virtual ICollection<League> Leagues { get; set; }
+        public virtual ICollection<Court> Courts { get; set; }
     }
 }

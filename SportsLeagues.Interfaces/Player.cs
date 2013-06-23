@@ -17,17 +17,22 @@ namespace SportsLeagues.Interfaces
         public Player()
         {
             this.ContactDetails = new HashSet<ContactDetail>();
+            this.Fixture = new HashSet<Fixture>();
+            this.Fixture1 = new HashSet<Fixture>();
             this.Leagues = new HashSet<League>();
+            this.Confirmations = new HashSet<Confirmation>();
         }
     
         public System.Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Username { get; set; }
+        public int Seed { get; set; }
     
         public virtual ICollection<ContactDetail> ContactDetails { get; set; }
-        public virtual Fixture Fixture { get; set; }
-        public virtual Fixture Fixture1 { get; set; }
+        public virtual ICollection<Fixture> Fixture { get; set; }
+        public virtual ICollection<Fixture> Fixture1 { get; set; }
         public virtual ICollection<League> Leagues { get; set; }
+        public virtual ICollection<Confirmation> Confirmations { get; set; }
     }
 }

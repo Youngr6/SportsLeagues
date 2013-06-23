@@ -51,7 +51,16 @@
     <Compile Include="Box.cs">
       <DependentUpon>SportsLeaguesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Confirmation.cs">
+      <DependentUpon>SportsLeaguesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ConfirmationStatusEnum.cs">
+      <DependentUpon>SportsLeaguesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="ContactDetail.cs">
+      <DependentUpon>SportsLeaguesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Court.cs">
       <DependentUpon>SportsLeaguesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Dto\ContactDetailDto.cs" />
@@ -62,6 +71,10 @@
       <DependentUpon>SportsLeaguesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Dto\FixtureDto.cs" />
+    <Compile Include="FixtureP.cs" />
+    <Compile Include="FixtureStatusEnum.cs">
+      <DependentUpon>SportsLeaguesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="IPlayerManager.cs" />
     <Compile Include="League.cs">
       <DependentUpon>SportsLeaguesModel.tt</DependentUpon>

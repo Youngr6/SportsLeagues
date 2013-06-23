@@ -30,6 +30,10 @@ namespace SportsLeagues.Interfaces
 
     Season CalculateNewSeason(string username, Guid leagueId, DateTime startDate);
 
+    Court AddCourt(string username, string courtName, int sequence);
+
+    void AddCourt(string username, Guid leagueId, Guid courtId);
+
     void AddPlayer(string username, Guid leagueId, Guid playerId);
 
     void AddPlayers(string username, Guid leagueId, Guid[] playerIds);

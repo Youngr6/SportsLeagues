@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 06/16/2013 20:45:36
+-- Date Created: 06/19/2013 12:31:37
 -- Generated from EDMX file: C:\dev\src\SportsLeagues\SportsLeagues.Services\LeaguesModel.edmx
 -- --------------------------------------------------
 
@@ -29,14 +29,14 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_FK_AwayPlayers_Fixtures]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[FK_AwayPlayers] DROP CONSTRAINT [FK_FK_AwayPlayers_Fixtures];
 GO
-IF OBJECT_ID(N'[dbo].[FK_FK_AwayPlayers_Players]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[FK_AwayPlayers] DROP CONSTRAINT [FK_FK_AwayPlayers_Players];
+IF OBJECT_ID(N'[dbo].[FK_FK_AwayPlayers_AwayPlayers]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[FK_AwayPlayers] DROP CONSTRAINT [FK_FK_AwayPlayers_AwayPlayers];
 GO
 IF OBJECT_ID(N'[dbo].[FK_FK_HomePlayers_Fixtures]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[FK_HomePlayers] DROP CONSTRAINT [FK_FK_HomePlayers_Fixtures];
 GO
-IF OBJECT_ID(N'[dbo].[FK_FK_HomePlayers_Players]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[FK_HomePlayers] DROP CONSTRAINT [FK_FK_HomePlayers_Players];
+IF OBJECT_ID(N'[dbo].[FK_FK_HomePlayers_HomePlayers]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[FK_HomePlayers] DROP CONSTRAINT [FK_FK_HomePlayers_HomePlayers];
 GO
 IF OBJECT_ID(N'[dbo].[FK_LeagueConfigSeason]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Seasons] DROP CONSTRAINT [FK_LeagueConfigSeason];
@@ -52,6 +52,21 @@ IF OBJECT_ID(N'[dbo].[FK_LeaguePlayer_League]', 'F') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[FK_LeaguePlayer_Player]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[LeaguePlayer] DROP CONSTRAINT [FK_LeaguePlayer_Player];
+GO
+IF OBJECT_ID(N'[dbo].[FK_LeagueConfigCourt_LeagueConfig]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[LeagueConfigCourt] DROP CONSTRAINT [FK_LeagueConfigCourt_LeagueConfig];
+GO
+IF OBJECT_ID(N'[dbo].[FK_LeagueConfigCourt_Court]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[LeagueConfigCourt] DROP CONSTRAINT [FK_LeagueConfigCourt_Court];
+GO
+IF OBJECT_ID(N'[dbo].[FK_FixtureCourt]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Fixtures] DROP CONSTRAINT [FK_FixtureCourt];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ConfirmationPlayer]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Confirmations] DROP CONSTRAINT [FK_ConfirmationPlayer];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ConfirmationFixture]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Confirmations] DROP CONSTRAINT [FK_ConfirmationFixture];
 GO
 
 -- --------------------------------------------------
@@ -79,6 +94,12 @@ GO
 IF OBJECT_ID(N'[dbo].[Seasons]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Seasons];
 GO
+IF OBJECT_ID(N'[dbo].[Courts]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Courts];
+GO
+IF OBJECT_ID(N'[dbo].[Confirmations]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Confirmations];
+GO
 IF OBJECT_ID(N'[dbo].[FK_AwayPlayers]', 'U') IS NOT NULL
     DROP TABLE [dbo].[FK_AwayPlayers];
 GO
@@ -88,6 +109,9 @@ GO
 IF OBJECT_ID(N'[dbo].[LeaguePlayer]', 'U') IS NOT NULL
     DROP TABLE [dbo].[LeaguePlayer];
 GO
+IF OBJECT_ID(N'[dbo].[LeagueConfigCourt]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[LeagueConfigCourt];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -96,6 +120,7 @@ GO
 -- Creating table 'Boxes'
 CREATE TABLE [dbo].[Boxes] (
     [Id] uniqueidentifier  NOT NULL,
+    [Number] int  NOT NULL,
     [Season_Id] uniqueidentifier  NOT NULL
 );
 GO
@@ -118,7 +143,10 @@ CREATE TABLE [dbo].[Fixtures] (
     [AwayScore] int  NULL,
     [Winner] int  NULL,
     [Sequence] int  NOT NULL,
-    [Box_Id] uniqueidentifier  NOT NULL
+    [ProposedDate] datetime  NULL,
+    [Status] int  NOT NULL,
+    [Box_Id] uniqueidentifier  NOT NULL,
+    [Court_Id] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -144,7 +172,8 @@ CREATE TABLE [dbo].[Players] (
     [Id] uniqueidentifier  NOT NULL,
     [FirstName] nvarchar(50)  NULL,
     [LastName] nvarchar(50)  NULL,
-    [Username] nvarchar(50)  NULL
+    [Username] nvarchar(50)  NULL,
+    [Seed] int  NOT NULL
 );
 GO
 
@@ -160,17 +189,34 @@ CREATE TABLE [dbo].[Seasons] (
 );
 GO
 
+-- Creating table 'Courts'
+CREATE TABLE [dbo].[Courts] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Description] nvarchar(150)  NOT NULL,
+    [Sequence] int  NOT NULL
+);
+GO
+
+-- Creating table 'Confirmations'
+CREATE TABLE [dbo].[Confirmations] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Status] int  NOT NULL,
+    [Player_Id] uniqueidentifier  NOT NULL,
+    [Fixture_Id] uniqueidentifier  NOT NULL
+);
+GO
+
 -- Creating table 'FK_AwayPlayers'
 CREATE TABLE [dbo].[FK_AwayPlayers] (
     [Fixture_Id] uniqueidentifier  NOT NULL,
-    [Players_Id] uniqueidentifier  NOT NULL
+    [AwayPlayers_Id] uniqueidentifier  NOT NULL
 );
 GO
 
 -- Creating table 'FK_HomePlayers'
 CREATE TABLE [dbo].[FK_HomePlayers] (
     [Fixture1_Id] uniqueidentifier  NOT NULL,
-    [Players1_Id] uniqueidentifier  NOT NULL
+    [HomePlayers_Id] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -178,6 +224,13 @@ GO
 CREATE TABLE [dbo].[LeaguePlayer] (
     [Leagues_Id] uniqueidentifier  NOT NULL,
     [Players_Id] uniqueidentifier  NOT NULL
+);
+GO
+
+-- Creating table 'LeagueConfigCourt'
+CREATE TABLE [dbo].[LeagueConfigCourt] (
+    [LeagueConfigs_Id] uniqueidentifier  NOT NULL,
+    [Courts_Id] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -227,22 +280,40 @@ ADD CONSTRAINT [PK_Seasons]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Fixture_Id], [Players_Id] in table 'FK_AwayPlayers'
-ALTER TABLE [dbo].[FK_AwayPlayers]
-ADD CONSTRAINT [PK_FK_AwayPlayers]
-    PRIMARY KEY NONCLUSTERED ([Fixture_Id], [Players_Id] ASC);
+-- Creating primary key on [Id] in table 'Courts'
+ALTER TABLE [dbo].[Courts]
+ADD CONSTRAINT [PK_Courts]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Fixture1_Id], [Players1_Id] in table 'FK_HomePlayers'
+-- Creating primary key on [Id] in table 'Confirmations'
+ALTER TABLE [dbo].[Confirmations]
+ADD CONSTRAINT [PK_Confirmations]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Fixture_Id], [AwayPlayers_Id] in table 'FK_AwayPlayers'
+ALTER TABLE [dbo].[FK_AwayPlayers]
+ADD CONSTRAINT [PK_FK_AwayPlayers]
+    PRIMARY KEY NONCLUSTERED ([Fixture_Id], [AwayPlayers_Id] ASC);
+GO
+
+-- Creating primary key on [Fixture1_Id], [HomePlayers_Id] in table 'FK_HomePlayers'
 ALTER TABLE [dbo].[FK_HomePlayers]
 ADD CONSTRAINT [PK_FK_HomePlayers]
-    PRIMARY KEY NONCLUSTERED ([Fixture1_Id], [Players1_Id] ASC);
+    PRIMARY KEY NONCLUSTERED ([Fixture1_Id], [HomePlayers_Id] ASC);
 GO
 
 -- Creating primary key on [Leagues_Id], [Players_Id] in table 'LeaguePlayer'
 ALTER TABLE [dbo].[LeaguePlayer]
 ADD CONSTRAINT [PK_LeaguePlayer]
     PRIMARY KEY NONCLUSTERED ([Leagues_Id], [Players_Id] ASC);
+GO
+
+-- Creating primary key on [LeagueConfigs_Id], [Courts_Id] in table 'LeagueConfigCourt'
+ALTER TABLE [dbo].[LeagueConfigCourt]
+ADD CONSTRAINT [PK_LeagueConfigCourt]
+    PRIMARY KEY NONCLUSTERED ([LeagueConfigs_Id], [Courts_Id] ASC);
 GO
 
 -- --------------------------------------------------
@@ -300,18 +371,18 @@ ADD CONSTRAINT [FK_FK_AwayPlayers_Fixtures]
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating foreign key on [Players_Id] in table 'FK_AwayPlayers'
+-- Creating foreign key on [AwayPlayers_Id] in table 'FK_AwayPlayers'
 ALTER TABLE [dbo].[FK_AwayPlayers]
-ADD CONSTRAINT [FK_FK_AwayPlayers_Players]
-    FOREIGN KEY ([Players_Id])
+ADD CONSTRAINT [FK_FK_AwayPlayers_AwayPlayers]
+    FOREIGN KEY ([AwayPlayers_Id])
     REFERENCES [dbo].[Players]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- Creating non-clustered index for FOREIGN KEY 'FK_FK_AwayPlayers_Players'
-CREATE INDEX [IX_FK_FK_AwayPlayers_Players]
+-- Creating non-clustered index for FOREIGN KEY 'FK_FK_AwayPlayers_AwayPlayers'
+CREATE INDEX [IX_FK_FK_AwayPlayers_AwayPlayers]
 ON [dbo].[FK_AwayPlayers]
-    ([Players_Id]);
+    ([AwayPlayers_Id]);
 GO
 
 -- Creating foreign key on [Fixture1_Id] in table 'FK_HomePlayers'
@@ -323,18 +394,18 @@ ADD CONSTRAINT [FK_FK_HomePlayers_Fixtures]
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating foreign key on [Players1_Id] in table 'FK_HomePlayers'
+-- Creating foreign key on [HomePlayers_Id] in table 'FK_HomePlayers'
 ALTER TABLE [dbo].[FK_HomePlayers]
-ADD CONSTRAINT [FK_FK_HomePlayers_Players]
-    FOREIGN KEY ([Players1_Id])
+ADD CONSTRAINT [FK_FK_HomePlayers_HomePlayers]
+    FOREIGN KEY ([HomePlayers_Id])
     REFERENCES [dbo].[Players]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- Creating non-clustered index for FOREIGN KEY 'FK_FK_HomePlayers_Players'
-CREATE INDEX [IX_FK_FK_HomePlayers_Players]
+-- Creating non-clustered index for FOREIGN KEY 'FK_FK_HomePlayers_HomePlayers'
+CREATE INDEX [IX_FK_FK_HomePlayers_HomePlayers]
 ON [dbo].[FK_HomePlayers]
-    ([Players1_Id]);
+    ([HomePlayers_Id]);
 GO
 
 -- Creating foreign key on [LeagueConfig_Id] in table 'Seasons'
@@ -400,6 +471,71 @@ ADD CONSTRAINT [FK_LeaguePlayer_Player]
 CREATE INDEX [IX_FK_LeaguePlayer_Player]
 ON [dbo].[LeaguePlayer]
     ([Players_Id]);
+GO
+
+-- Creating foreign key on [LeagueConfigs_Id] in table 'LeagueConfigCourt'
+ALTER TABLE [dbo].[LeagueConfigCourt]
+ADD CONSTRAINT [FK_LeagueConfigCourt_LeagueConfig]
+    FOREIGN KEY ([LeagueConfigs_Id])
+    REFERENCES [dbo].[LeagueConfigs]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [Courts_Id] in table 'LeagueConfigCourt'
+ALTER TABLE [dbo].[LeagueConfigCourt]
+ADD CONSTRAINT [FK_LeagueConfigCourt_Court]
+    FOREIGN KEY ([Courts_Id])
+    REFERENCES [dbo].[Courts]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_LeagueConfigCourt_Court'
+CREATE INDEX [IX_FK_LeagueConfigCourt_Court]
+ON [dbo].[LeagueConfigCourt]
+    ([Courts_Id]);
+GO
+
+-- Creating foreign key on [Court_Id] in table 'Fixtures'
+ALTER TABLE [dbo].[Fixtures]
+ADD CONSTRAINT [FK_FixtureCourt]
+    FOREIGN KEY ([Court_Id])
+    REFERENCES [dbo].[Courts]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_FixtureCourt'
+CREATE INDEX [IX_FK_FixtureCourt]
+ON [dbo].[Fixtures]
+    ([Court_Id]);
+GO
+
+-- Creating foreign key on [Player_Id] in table 'Confirmations'
+ALTER TABLE [dbo].[Confirmations]
+ADD CONSTRAINT [FK_ConfirmationPlayer]
+    FOREIGN KEY ([Player_Id])
+    REFERENCES [dbo].[Players]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ConfirmationPlayer'
+CREATE INDEX [IX_FK_ConfirmationPlayer]
+ON [dbo].[Confirmations]
+    ([Player_Id]);
+GO
+
+-- Creating foreign key on [Fixture_Id] in table 'Confirmations'
+ALTER TABLE [dbo].[Confirmations]
+ADD CONSTRAINT [FK_ConfirmationFixture]
+    FOREIGN KEY ([Fixture_Id])
+    REFERENCES [dbo].[Fixtures]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ConfirmationFixture'
+CREATE INDEX [IX_FK_ConfirmationFixture]
+ON [dbo].[Confirmations]
+    ([Fixture_Id]);
 GO
 
 -- --------------------------------------------------

@@ -21,6 +21,12 @@
         <AssociationConnector Association="LeaguesModel.FK_LeagueLeagueConfig" ManuallyRouted="false" />
         <AssociationConnector Association="LeaguesModel.FK_LeagueSeason" ManuallyRouted="false" />
         <AssociationConnector Association="LeaguesModel.LeaguePlayer" />
+        <EntityTypeShape EntityType="LeaguesModel.Court" Width="1.5" PointX="0.75" PointY="5.375" />
+        <AssociationConnector Association="LeaguesModel.LeagueConfigCourt" />
+        <AssociationConnector Association="LeaguesModel.FixtureCourt" />
+        <EntityTypeShape EntityType="LeaguesModel.Confirmation" Width="1.5" PointX="7.25" PointY="6.125" />
+        <AssociationConnector Association="LeaguesModel.ConfirmationPlayer" />
+        <AssociationConnector Association="LeaguesModel.ConfirmationFixture" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

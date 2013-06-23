@@ -13,9 +13,12 @@
     <EntitySet Name="Leagues" EntityType="LeaguesModel.Store.Leagues" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Players" EntityType="LeaguesModel.Store.Players" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Seasons" EntityType="LeaguesModel.Store.Seasons" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Courts" EntityType="LeaguesModel.Store.Courts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Confirmations" EntityType="LeaguesModel.Store.Confirmations" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="FK_AwayPlayers" EntityType="LeaguesModel.Store.FK_AwayPlayers" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="FK_HomePlayers" EntityType="LeaguesModel.Store.FK_HomePlayers" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="LeaguePlayer" EntityType="LeaguesModel.Store.LeaguePlayer" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="LeagueConfigCourt" EntityType="LeaguesModel.Store.LeagueConfigCourt" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FK_BoxFixture" Association="LeaguesModel.Store.FK_BoxFixture">
       <End Role="Boxes" EntitySet="Boxes" />
       <End Role="Fixtures" EntitySet="Fixtures" />
@@ -32,16 +35,16 @@
       <End Role="Fixtures" EntitySet="Fixtures" />
       <End Role="FK_AwayPlayers" EntitySet="FK_AwayPlayers" />
     </AssociationSet>
-    <AssociationSet Name="FK_FK_AwayPlayers_Players" Association="LeaguesModel.Store.FK_FK_AwayPlayers_Players">
-      <End Role="Players" EntitySet="Players" />
+    <AssociationSet Name="FK_FK_AwayPlayers_AwayPlayers" Association="LeaguesModel.Store.FK_FK_AwayPlayers_AwayPlayers">
+      <End Role="AwayPlayers" EntitySet="Players" />
       <End Role="FK_AwayPlayers" EntitySet="FK_AwayPlayers" />
     </AssociationSet>
     <AssociationSet Name="FK_FK_HomePlayers_Fixtures" Association="LeaguesModel.Store.FK_FK_HomePlayers_Fixtures">
       <End Role="Fixtures" EntitySet="Fixtures" />
       <End Role="FK_HomePlayers" EntitySet="FK_HomePlayers" />
     </AssociationSet>
-    <AssociationSet Name="FK_FK_HomePlayers_Players" Association="LeaguesModel.Store.FK_FK_HomePlayers_Players">
-      <End Role="Players" EntitySet="Players" />
+    <AssociationSet Name="FK_FK_HomePlayers_HomePlayers" Association="LeaguesModel.Store.FK_FK_HomePlayers_HomePlayers">
+      <End Role="HomePlayers" EntitySet="Players" />
       <End Role="FK_HomePlayers" EntitySet="FK_HomePlayers" />
     </AssociationSet>
     <AssociationSet Name="FK_LeagueConfigSeason" Association="LeaguesModel.Store.FK_LeagueConfigSeason">
@@ -64,12 +67,33 @@
       <End Role="Player" EntitySet="Players" />
       <End Role="LeaguePlayer" EntitySet="LeaguePlayer" />
     </AssociationSet>
+    <AssociationSet Name="FK_LeagueConfigCourt_LeagueConfig" Association="LeaguesModel.Store.FK_LeagueConfigCourt_LeagueConfig">
+      <End Role="LeagueConfig" EntitySet="LeagueConfigs" />
+      <End Role="LeagueConfigCourt" EntitySet="LeagueConfigCourt" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LeagueConfigCourt_Court" Association="LeaguesModel.Store.FK_LeagueConfigCourt_Court">
+      <End Role="Court" EntitySet="Courts" />
+      <End Role="LeagueConfigCourt" EntitySet="LeagueConfigCourt" />
+    </AssociationSet>
+    <AssociationSet Name="FixtureCourt" Association="LeaguesModel.Store.FixtureCourt">
+      <End Role="Fixture" EntitySet="Fixtures" />
+      <End Role="Court" EntitySet="Courts" />
+    </AssociationSet>
+    <AssociationSet Name="ConfirmationPlayer" Association="LeaguesModel.Store.ConfirmationPlayer">
+      <End Role="Confirmation" EntitySet="Confirmations" />
+      <End Role="Player" EntitySet="Players" />
+    </AssociationSet>
+    <AssociationSet Name="ConfirmationFixture" Association="LeaguesModel.Store.ConfirmationFixture">
+      <End Role="Confirmation" EntitySet="Confirmations" />
+      <End Role="Fixture" EntitySet="Fixtures" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Boxes">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Number" Type="int" Nullable="false" />
     <Property Name="Season_Id" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="ContactDetails">
@@ -92,7 +116,10 @@
     <Property Name="AwayScore" Type="int" Nullable="true" />
     <Property Name="Winner" Type="int" Nullable="true" />
     <Property Name="Sequence" Type="int" Nullable="false" />
+    <Property Name="ProposedDate" Type="datetime" Nullable="true" />
+    <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="Box_Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Court_Id" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="LeagueConfigs">
     <Key>
@@ -119,6 +146,7 @@
     <Property Name="FirstName" Type="nvarchar" Nullable="true" MaxLength="50" />
     <Property Name="LastName" Type="nvarchar" Nullable="true" MaxLength="50" />
     <Property Name="Username" Type="nvarchar" Nullable="true" MaxLength="50" />
+    <Property Name="Seed" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Seasons">
     <Key>
@@ -132,21 +160,38 @@
     <Property Name="LeagueConfig_Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="League_Id" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
+  <EntityType Name="Courts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" Nullable="false" MaxLength="150" />
+    <Property Name="Sequence" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Confirmations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="Player_Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Fixture_Id" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
   <EntityType Name="FK_AwayPlayers">
     <Key>
       <PropertyRef Name="Fixture_Id" />
-      <PropertyRef Name="Players_Id" />
+      <PropertyRef Name="AwayPlayers_Id" />
     </Key>
     <Property Name="Fixture_Id" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Players_Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="AwayPlayers_Id" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="FK_HomePlayers">
     <Key>
       <PropertyRef Name="Fixture1_Id" />
-      <PropertyRef Name="Players1_Id" />
+      <PropertyRef Name="HomePlayers_Id" />
     </Key>
     <Property Name="Fixture1_Id" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Players1_Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="HomePlayers_Id" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="LeaguePlayer">
     <Key>
@@ -155,6 +200,14 @@
     </Key>
     <Property Name="Leagues_Id" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Players_Id" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="LeagueConfigCourt">
+    <Key>
+      <PropertyRef Name="LeagueConfigs_Id" />
+      <PropertyRef Name="Courts_Id" />
+    </Key>
+    <Property Name="LeagueConfigs_Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Courts_Id" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <Association Name="FK_BoxFixture">
     <End Role="Boxes" Type="LeaguesModel.Store.Boxes" Multiplicity="1" />
@@ -228,6 +281,42 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FixtureCourt">
+    <End Role="Fixture" Type="LeaguesModel.Store.Fixtures" Multiplicity="*" />
+    <End Role="Court" Type="LeaguesModel.Store.Courts" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Court">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Fixture">
+        <PropertyRef Name="Court_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ConfirmationPlayer">
+    <End Role="Confirmation" Type="LeaguesModel.Store.Confirmations" Multiplicity="*" />
+    <End Role="Player" Type="LeaguesModel.Store.Players" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Player">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Confirmation">
+        <PropertyRef Name="Player_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ConfirmationFixture">
+    <End Role="Confirmation" Type="LeaguesModel.Store.Confirmations" Multiplicity="*" />
+    <End Role="Fixture" Type="LeaguesModel.Store.Fixtures" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Fixture">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Confirmation">
+        <PropertyRef Name="Fixture_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_FK_AwayPlayers_Fixtures">
     <End Role="Fixtures" Type="LeaguesModel.Store.Fixtures" Multiplicity="1" />
     <End Role="FK_AwayPlayers" Type="LeaguesModel.Store.FK_AwayPlayers" Multiplicity="*" />
@@ -240,15 +329,15 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_FK_AwayPlayers_Players">
+  <Association Name="FK_FK_AwayPlayers_AwayPlayers">
     <End Role="FK_AwayPlayers" Type="LeaguesModel.Store.FK_AwayPlayers" Multiplicity="*" />
-    <End Role="Players" Type="LeaguesModel.Store.Players" Multiplicity="1" />
+    <End Role="AwayPlayers" Type="LeaguesModel.Store.Players" Multiplicity="1" />
     <ReferentialConstraint>
-      <Principal Role="Players">
+      <Principal Role="AwayPlayers">
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="FK_AwayPlayers">
-        <PropertyRef Name="Players_Id" />
+        <PropertyRef Name="AwayPlayers_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -264,15 +353,15 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_FK_HomePlayers_Players">
+  <Association Name="FK_FK_HomePlayers_HomePlayers">
     <End Role="FK_HomePlayers" Type="LeaguesModel.Store.FK_HomePlayers" Multiplicity="*" />
-    <End Role="Players" Type="LeaguesModel.Store.Players" Multiplicity="1" />
+    <End Role="HomePlayers" Type="LeaguesModel.Store.Players" Multiplicity="1" />
     <ReferentialConstraint>
-      <Principal Role="Players">
+      <Principal Role="HomePlayers">
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="FK_HomePlayers">
-        <PropertyRef Name="Players1_Id" />
+        <PropertyRef Name="HomePlayers_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -297,6 +386,30 @@
       </Principal>
       <Dependent Role="LeaguePlayer">
         <PropertyRef Name="Players_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LeagueConfigCourt_LeagueConfig">
+    <End Role="LeagueConfig" Type="LeaguesModel.Store.LeagueConfigs" Multiplicity="1" />
+    <End Role="LeagueConfigCourt" Type="LeaguesModel.Store.LeagueConfigCourt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LeagueConfig">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="LeagueConfigCourt">
+        <PropertyRef Name="LeagueConfigs_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LeagueConfigCourt_Court">
+    <End Role="LeagueConfigCourt" Type="LeaguesModel.Store.LeagueConfigCourt" Multiplicity="*" />
+    <End Role="Court" Type="LeaguesModel.Store.Courts" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Court">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="LeagueConfigCourt">
+        <PropertyRef Name="Courts_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -326,11 +439,11 @@
           </AssociationSet>
           <AssociationSet Name="FK_AwayPlayers" Association="LeaguesModel.FK_AwayPlayers">
             <End Role="Fixtures" EntitySet="Fixtures" />
-            <End Role="Players" EntitySet="Players" />
+            <End Role="AwayPlayers" EntitySet="Players" />
           </AssociationSet>
           <AssociationSet Name="FK_HomePlayers" Association="LeaguesModel.FK_HomePlayers">
             <End Role="Fixtures" EntitySet="Fixtures" />
-            <End Role="Players" EntitySet="Players" />
+            <End Role="HomePlayers" EntitySet="Players" />
           </AssociationSet>
           <AssociationSet Name="FK_LeagueConfigSeason" Association="LeaguesModel.FK_LeagueConfigSeason">
             <End Role="LeagueConfigs" EntitySet="LeagueConfigs" />
@@ -348,6 +461,24 @@
             <End Role="League" EntitySet="Leagues" />
             <End Role="Player" EntitySet="Players" />
           </AssociationSet>
+          <EntitySet Name="Courts" EntityType="LeaguesModel.Court" />
+          <AssociationSet Name="LeagueConfigCourt" Association="LeaguesModel.LeagueConfigCourt">
+            <End Role="LeagueConfig" EntitySet="LeagueConfigs" />
+            <End Role="Court" EntitySet="Courts" />
+          </AssociationSet>
+          <AssociationSet Name="FixtureCourt" Association="LeaguesModel.FixtureCourt">
+            <End Role="Fixture" EntitySet="Fixtures" />
+            <End Role="Court" EntitySet="Courts" />
+          </AssociationSet>
+          <EntitySet Name="Confirmations" EntityType="LeaguesModel.Confirmation" />
+          <AssociationSet Name="ConfirmationPlayer" Association="LeaguesModel.ConfirmationPlayer">
+            <End Role="Confirmation" EntitySet="Confirmations" />
+            <End Role="Player" EntitySet="Players" />
+          </AssociationSet>
+          <AssociationSet Name="ConfirmationFixture" Association="LeaguesModel.ConfirmationFixture">
+            <End Role="Confirmation" EntitySet="Confirmations" />
+            <End Role="Fixture" EntitySet="Fixtures" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Box">
           <Key>
@@ -356,6 +487,7 @@
           <Property Name="Id" Type="Guid" Nullable="false" />
           <NavigationProperty Name="Fixtures" Relationship="LeaguesModel.FK_BoxFixture" FromRole="Boxes" ToRole="Fixtures" />
           <NavigationProperty Name="Season" Relationship="LeaguesModel.FK_SeasonBox" FromRole="Boxes" ToRole="Seasons" />
+          <Property Type="Int32" Name="Number" Nullable="false" />
         </EntityType>
         <EntityType Name="ContactDetail">
           <Key>
@@ -378,8 +510,12 @@
           <Property Name="Winner" Type="Int32" />
           <Property Name="Sequence" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Box" Relationship="LeaguesModel.FK_BoxFixture" FromRole="Fixtures" ToRole="Boxes" />
-          <NavigationProperty Name="Players" Relationship="LeaguesModel.FK_AwayPlayers" FromRole="Fixtures" ToRole="Players" />
-          <NavigationProperty Name="Players1" Relationship="LeaguesModel.FK_HomePlayers" FromRole="Fixtures" ToRole="Players" />
+          <NavigationProperty Name="AwayPlayers" Relationship="LeaguesModel.FK_AwayPlayers" FromRole="Fixtures" ToRole="AwayPlayers" />
+          <NavigationProperty Name="HomePlayers" Relationship="LeaguesModel.FK_HomePlayers" FromRole="Fixtures" ToRole="HomePlayers" />
+          <NavigationProperty Name="Court" Relationship="LeaguesModel.FixtureCourt" FromRole="Fixture" ToRole="Court" />
+          <Property Type="DateTime" Name="ProposedDate" Nullable="true" />
+          <NavigationProperty Name="Confirmations" Relationship="LeaguesModel.ConfirmationFixture" FromRole="Fixture" ToRole="Confirmation" />
+          <Property Type="LeaguesModel.FixtureStatusEnum" Name="Status" Nullable="false" />
         </EntityType>
         <EntityType Name="LeagueConfig">
           <Key>
@@ -391,6 +527,7 @@
           <Property Name="MovementSize" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Seasons" Relationship="LeaguesModel.FK_LeagueConfigSeason" FromRole="LeagueConfigs" ToRole="Seasons" />
           <NavigationProperty Name="Leagues" Relationship="LeaguesModel.FK_LeagueLeagueConfig" FromRole="LeagueConfigs" ToRole="Leagues" />
+          <NavigationProperty Name="Courts" Relationship="LeaguesModel.LeagueConfigCourt" FromRole="LeagueConfig" ToRole="Court" />
         </EntityType>
         <EntityType Name="League">
           <Key>
@@ -411,9 +548,11 @@
           <Property Name="LastName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="Username" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="ContactDetails" Relationship="LeaguesModel.FK_PlayerContactDetail" FromRole="Players" ToRole="ContactDetails" />
-          <NavigationProperty Name="Fixture" Relationship="LeaguesModel.FK_AwayPlayers" FromRole="Players" ToRole="Fixtures" />
-          <NavigationProperty Name="Fixture1" Relationship="LeaguesModel.FK_HomePlayers" FromRole="Players" ToRole="Fixtures" />
+          <NavigationProperty Name="Fixture" Relationship="LeaguesModel.FK_AwayPlayers" FromRole="AwayPlayers" ToRole="Fixtures" />
+          <NavigationProperty Name="Fixture1" Relationship="LeaguesModel.FK_HomePlayers" FromRole="HomePlayers" ToRole="Fixtures" />
           <NavigationProperty Name="Leagues" Relationship="LeaguesModel.LeaguePlayer" FromRole="Player" ToRole="League" />
+          <Property Type="Int32" Name="Seed" Nullable="false" />
+          <NavigationProperty Name="Confirmations" Relationship="LeaguesModel.ConfirmationPlayer" FromRole="Player" ToRole="Confirmation" />
         </EntityType>
         <EntityType Name="Season">
           <Key>
@@ -442,11 +581,11 @@
         </Association>
         <Association Name="FK_AwayPlayers">
           <End Role="Fixtures" Type="LeaguesModel.Fixture" Multiplicity="*" />
-          <End Role="Players" Type="LeaguesModel.Player" Multiplicity="*" />
+          <End Role="AwayPlayers" Type="LeaguesModel.Player" Multiplicity="*" />
         </Association>
         <Association Name="FK_HomePlayers">
           <End Role="Fixtures" Type="LeaguesModel.Fixture" Multiplicity="*" />
-          <End Role="Players" Type="LeaguesModel.Player" Multiplicity="*" />
+          <End Role="HomePlayers" Type="LeaguesModel.Player" Multiplicity="*" />
         </Association>
         <Association Name="FK_LeagueConfigSeason">
           <End Role="LeagueConfigs" Type="LeaguesModel.LeagueConfig" Multiplicity="1" />
@@ -469,6 +608,56 @@
           <End Type="LeaguesModel.League" Role="League" Multiplicity="*" />
           <End Type="LeaguesModel.Player" Role="Player" Multiplicity="*" />
         </Association>
+        <EntityType Name="Court">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Guid" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <NavigationProperty Name="LeagueConfigs" Relationship="LeaguesModel.LeagueConfigCourt" FromRole="Court" ToRole="LeagueConfig" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Fixtures" Relationship="LeaguesModel.FixtureCourt" FromRole="Court" ToRole="Fixture" />
+          <Property Type="Int32" Name="Sequence" Nullable="false" />
+        </EntityType>
+        <Association Name="LeagueConfigCourt">
+          <End Type="LeaguesModel.LeagueConfig" Role="LeagueConfig" Multiplicity="*" />
+          <End Type="LeaguesModel.Court" Role="Court" Multiplicity="*" />
+        </Association>
+        <Association Name="FixtureCourt">
+          <End Type="LeaguesModel.Fixture" Role="Fixture" Multiplicity="*" />
+          <End Type="LeaguesModel.Court" Role="Court" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Confirmation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Guid" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="LeaguesModel.ConfirmationStatusEnum" Name="Status" Nullable="false" />
+          <NavigationProperty Name="Player" Relationship="LeaguesModel.ConfirmationPlayer" FromRole="Confirmation" ToRole="Player" />
+          <NavigationProperty Name="Fixture" Relationship="LeaguesModel.ConfirmationFixture" FromRole="Confirmation" ToRole="Fixture" />
+        </EntityType>
+        <Association Name="ConfirmationPlayer">
+          <End Type="LeaguesModel.Confirmation" Role="Confirmation" Multiplicity="*" />
+          <End Type="LeaguesModel.Player" Role="Player" Multiplicity="1" />
+        </Association>
+        <Association Name="ConfirmationFixture">
+          <End Type="LeaguesModel.Confirmation" Role="Confirmation" Multiplicity="*" />
+          <End Type="LeaguesModel.Fixture" Role="Fixture" Multiplicity="1" />
+        </Association>
+        <EnumType Name="FixtureStatusEnum">
+          <Member Name="Planned" />
+          <Member Name="Confirmed" />
+          <Member Name="Played" />
+          <Member Name="Cancelled" />
+          <Member Name="Noshow" />
+        </EnumType>
+        <EnumType Name="ConfirmationStatusEnum">
+          <Member Name="Unknown" />
+          <Member Name="Accept" />
+          <Member Name="Cancel" />
+          <Member Name="Rearrange" />
+          <Member Name="Postpone" />
+          <Member Name="OppNoShow" />
+        </EnumType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -479,6 +668,7 @@
       <EntityTypeMapping TypeName="IsTypeOf(LeaguesModel.Box)">
         <MappingFragment StoreEntitySet="Boxes">
           <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -501,6 +691,8 @@
           <ScalarProperty Name="AwayScore" ColumnName="AwayScore" />
           <ScalarProperty Name="Winner" ColumnName="Winner" />
           <ScalarProperty Name="Sequence" ColumnName="Sequence" />
+          <ScalarProperty Name="ProposedDate" ColumnName="ProposedDate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -529,6 +721,7 @@
           <ScalarProperty Name="FirstName" ColumnName="FirstName" />
           <ScalarProperty Name="LastName" ColumnName="LastName" />
           <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Seed" ColumnName="Seed" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -540,6 +733,23 @@
           <ScalarProperty Name="EndDate" ColumnName="EndDate" />
           <ScalarProperty Name="Description" ColumnName="Description" />
           <ScalarProperty Name="GeneratedDate" ColumnName="GeneratedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Courts">
+      <EntityTypeMapping TypeName="IsTypeOf(LeaguesModel.Court)">
+        <MappingFragment StoreEntitySet="Courts">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Sequence" ColumnName="Sequence" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Confirmations">
+      <EntityTypeMapping TypeName="IsTypeOf(LeaguesModel.Confirmation)">
+        <MappingFragment StoreEntitySet="Confirmations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -571,16 +781,16 @@
       <EndProperty Name="Fixtures">
         <ScalarProperty Name="Id" ColumnName="Fixture_Id" />
       </EndProperty>
-      <EndProperty Name="Players">
-        <ScalarProperty Name="Id" ColumnName="Players_Id" />
+      <EndProperty Name="AwayPlayers">
+        <ScalarProperty Name="Id" ColumnName="AwayPlayers_Id" />
       </EndProperty>
     </AssociationSetMapping>
     <AssociationSetMapping Name="FK_HomePlayers" TypeName="LeaguesModel.FK_HomePlayers" StoreEntitySet="FK_HomePlayers">
       <EndProperty Name="Fixtures">
         <ScalarProperty Name="Id" ColumnName="Fixture1_Id" />
       </EndProperty>
-      <EndProperty Name="Players">
-        <ScalarProperty Name="Id" ColumnName="Players1_Id" />
+      <EndProperty Name="HomePlayers">
+        <ScalarProperty Name="Id" ColumnName="HomePlayers_Id" />
       </EndProperty>
     </AssociationSetMapping>
     <AssociationSetMapping Name="FK_LeagueConfigSeason" TypeName="LeaguesModel.FK_LeagueConfigSeason" StoreEntitySet="Seasons">
@@ -613,6 +823,38 @@
       </EndProperty>
       <EndProperty Name="Player">
         <ScalarProperty Name="Id" ColumnName="Players_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="LeagueConfigCourt" TypeName="LeaguesModel.LeagueConfigCourt" StoreEntitySet="LeagueConfigCourt">
+      <EndProperty Name="LeagueConfig">
+        <ScalarProperty Name="Id" ColumnName="LeagueConfigs_Id" />
+      </EndProperty>
+      <EndProperty Name="Court">
+        <ScalarProperty Name="Id" ColumnName="Courts_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FixtureCourt" TypeName="LeaguesModel.FixtureCourt" StoreEntitySet="Fixtures">
+      <EndProperty Name="Court">
+        <ScalarProperty Name="Id" ColumnName="Court_Id" />
+      </EndProperty>
+      <EndProperty Name="Fixture">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ConfirmationPlayer" TypeName="LeaguesModel.ConfirmationPlayer" StoreEntitySet="Confirmations">
+      <EndProperty Name="Player">
+        <ScalarProperty Name="Id" ColumnName="Player_Id" />
+      </EndProperty>
+      <EndProperty Name="Confirmation">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ConfirmationFixture" TypeName="LeaguesModel.ConfirmationFixture" StoreEntitySet="Confirmations">
+      <EndProperty Name="Fixture">
+        <ScalarProperty Name="Id" ColumnName="Fixture_Id" />
+      </EndProperty>
+      <EndProperty Name="Confirmation">
+        <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
   </EntityContainerMapping>

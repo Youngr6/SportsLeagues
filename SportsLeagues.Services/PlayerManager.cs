@@ -10,13 +10,13 @@ namespace SportsLeagues.Services
 {
   public class PlayerManager : IPlayerManager
   {
-    public Player AddPlayer(string username, string firstName, string lastName, string userName, string emailAddress, string phoneNumber, string mobileNumber)
+    public Player AddPlayer(string username, string firstName, string lastName, string userName, string emailAddress, string phoneNumber, string mobileNumber, int seed)
     {
       using (SportsLeaguesEntities context = new SportsLeaguesEntities())
       {
         try
         {
-          Player player = new Player() { FirstName = firstName, LastName = lastName, Id = Guid.NewGuid(), Username = username };
+          Player player = new Player() { FirstName = firstName, LastName = lastName, Id = Guid.NewGuid(), Username = username, Seed = seed };
           if (!string.IsNullOrEmpty(emailAddress))
             player.ContactDetails.Add(new ContactDetail() { Id = Guid.NewGuid(), ContactType = ContactTypeEnum.EMailAddress, ContactValue = emailAddress });
           if (!string.IsNullOrEmpty(phoneNumber))

@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>Welcome to the Sports Leagues</h1>
+            </hgroup>
+            <p>
+                Please @Html.ActionLink("login", "Login", "Account") or @Html.ActionLink("register", "Register", "Account") to start using Sports Leagues
+            </p>
+        </div>
+    </section>
+}

@@ -34,5 +34,7 @@ namespace SportsLeagues.Services
         public DbSet<League> Leagues { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<Season> Seasons { get; set; }
+        public DbSet<Court> Courts { get; set; }
+        public DbSet<Confirmation> Confirmations { get; set; }
     }
 }

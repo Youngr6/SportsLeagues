@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsLeagues.Interfaces", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceTests", "ServiceTests\ServiceTests.csproj", "{4639EE15-91F3-4ED4-9C9D-B6D3CDA84225}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsLeagues", "SportsLeagues\SportsLeagues.csproj", "{BE75B327-36A4-4BCA-9CDB-C5BA13CF6AC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportsLeagues.Tests", "SportsLeagues.Tests\SportsLeagues.Tests.csproj", "{A8D7ED94-D2AB-49A7-BED7-A2991053BBEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,8 +29,19 @@ Global
 		{4639EE15-91F3-4ED4-9C9D-B6D3CDA84225}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4639EE15-91F3-4ED4-9C9D-B6D3CDA84225}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4639EE15-91F3-4ED4-9C9D-B6D3CDA84225}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE75B327-36A4-4BCA-9CDB-C5BA13CF6AC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE75B327-36A4-4BCA-9CDB-C5BA13CF6AC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE75B327-36A4-4BCA-9CDB-C5BA13CF6AC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE75B327-36A4-4BCA-9CDB-C5BA13CF6AC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8D7ED94-D2AB-49A7-BED7-A2991053BBEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8D7ED94-D2AB-49A7-BED7-A2991053BBEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8D7ED94-D2AB-49A7-BED7-A2991053BBEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8D7ED94-D2AB-49A7-BED7-A2991053BBEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
 	EndGlobalSection
 EndGlobal

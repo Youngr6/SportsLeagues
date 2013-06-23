@@ -20,6 +20,7 @@ namespace SportsLeagues.Interfaces
         }
     
         public System.Guid Id { get; set; }
+        public int Number { get; set; }
     
         public virtual ICollection<Fixture> Fixtures { get; set; }
         public virtual Season Season { get; set; }

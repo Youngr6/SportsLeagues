@@ -1,0 +1,33 @@
+﻿@using SportsLeagues.Interfaces
+@model SportsLeagues.Models.LeagueIndexModel
+@{
+    ViewBag.Title = "Home Page";
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>Welcome to Sports Leagues</h1>
+            </hgroup>
+            <p>
+                
+            </p>
+        </div>
+    </section>
+}
+<h3>Active Leagues:</h3>
+<table class="table table-striped">
+    <thead>
+        <td>Name</td>
+        <td>Seasons</td>
+        <td>Players</td>
+    </thead>
+    @foreach (League league in Model.Leagues)
+    {
+        <tr>
+            <td>@Html.ActionLink(league.Name, "ViewSeason", "Home", new { leagueId = league.Id }, null)</td>
+            <td>@league.Seasons.Count</td>
+            <td>@league.Players.Count</td>
+        </tr>
+    }
+</table>

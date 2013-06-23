@@ -16,8 +16,9 @@ namespace SportsLeagues.Interfaces
     {
         public Fixture()
         {
-            this.Players = new HashSet<Player>();
-            this.Players1 = new HashSet<Player>();
+            this.AwayPlayers = new HashSet<Player>();
+            this.HomePlayers = new HashSet<Player>();
+            this.Confirmations = new HashSet<Confirmation>();
         }
     
         public System.Guid Id { get; set; }
@@ -26,9 +27,13 @@ namespace SportsLeagues.Interfaces
         public Nullable<int> AwayScore { get; set; }
         public Nullable<int> Winner { get; set; }
         public int Sequence { get; set; }
+        public Nullable<System.DateTime> ProposedDate { get; set; }
+        public FixtureStatusEnum Status { get; set; }
     
         public virtual Box Box { get; set; }
-        public virtual ICollection<Player> Players { get; set; }
-        public virtual ICollection<Player> Players1 { get; set; }
+        public virtual ICollection<Player> AwayPlayers { get; set; }
+        public virtual ICollection<Player> HomePlayers { get; set; }
+        public virtual Court Court { get; set; }
+        public virtual ICollection<Confirmation> Confirmations { get; set; }
     }
 }

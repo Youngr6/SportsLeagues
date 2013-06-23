@@ -8,7 +8,7 @@ namespace SportsLeagues.Interfaces
 {
   public interface IPlayerManager
   {
-    Player AddPlayer(string username, string firstName, string lastName, string userName, string emailAddress, string phoneNumber, string mobileNumber);
+    Player AddPlayer(string username, string firstName, string lastName, string userName, string emailAddress, string phoneNumber, string mobileNumber, int seed);
 
     Player[] GetPlayers(string username);
   }
