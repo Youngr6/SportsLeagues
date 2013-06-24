@@ -10,8 +10,8 @@ namespace SportsLeagues.Interfaces
   {
     public override string ToString()
     {
-      return string.Format("{0} {5} {1}({2}) vs {3}({4})", this.Date.ToShortDateString(), HomePlayers.First().LastName, HomePlayers.First().Seed,
-        AwayPlayers.First().LastName, AwayPlayers.First().Seed, Court != null ? Court.Description : "(no court)");
+      return string.Format("{0} {5} {1}({2}) vs {3}({4})", this.Date.ToShortDateString(), HomePlayers.First().FullName, HomePlayers.First().Seed,
+        AwayPlayers.First().FullName, AwayPlayers.First().Seed, Court != null ? Court.Description : "(no court)");
     }
   }
 }

@@ -28,7 +28,7 @@ namespace SportsLeagues.Interfaces
 
     Season GetCurrentSeason(string username, Guid leagueId);
 
-    Season CalculateNewSeason(string username, Guid leagueId, DateTime startDate);
+    Season CalculateNewSeason(string username, Guid leagueId, DateTime startDate, string seasonName);
 
     Court AddCourt(string username, string courtName, int sequence);
 
@@ -41,6 +41,8 @@ namespace SportsLeagues.Interfaces
     void RemovePlayer(string username, Guid leagueId, Guid playerId);
 
     Player[] GetPlayers(string username, Guid leagueId);
+
+    Fixture[] GetFixtures(string username, string playerUsername);
 
   }
 }

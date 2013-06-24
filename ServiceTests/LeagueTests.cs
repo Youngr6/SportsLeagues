@@ -45,7 +45,7 @@ namespace ServiceTests
       pm.AddPlayer("youngr6", "Richard" ,"Jenner", "richard.jenner@openfield.co.uk",null, null, "07879 454472",18);
 
       ILeagueManager lm = new LeagueManagerService();
-      League league = lm.CreateLeague("youngr6", "David Lloyd Squash", 0, 0, 2);
+      League league = lm.CreateLeague("youngr6", "David Lloyd Ringwood Squash", 0, 0, 2);
 
       lm.AddCourt("youngr6", league.Id, lm.AddCourt("youngr6", "Court 1", 1).Id);
       lm.AddCourt("youngr6", league.Id, lm.AddCourt("youngr6", "Court 2", 2).Id);
@@ -54,7 +54,7 @@ namespace ServiceTests
       Player[] players = pm.GetPlayers("youngr6");
 
       lm.AddPlayers("youngr6", league.Id, players.Select(p => p.Id).ToArray());
-      lm.CalculateNewSeason("youngr6", league.Id, new DateTime(2013, 6, 17));
+      lm.CalculateNewSeason("youngr6", league.Id, new DateTime(2013, 6, 17), "Summer");
 
       Assert.IsTrue(true);
     }

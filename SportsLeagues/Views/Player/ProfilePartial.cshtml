@@ -1,0 +1,15 @@
+﻿@using SportsLeagues.Interfaces
+@model SportsLeagues.Models.ProfileModel
+
+@*<h2>@Model.Player.FullName</h2>*@
+
+<table class="table">
+    @foreach (ContactDetail contact in Model.Player.ContactDetails)
+    { 
+    <tr>
+        <td>@contact.ContactType</td>
+        <td>@if(contact.ContactType== ContactTypeEnum.EMailAddress) {<text><a href="mailto:@contact.ContactValue">@contact.ContactValue</a></text>}else{<text>@contact.ContactValue</text>}</td>
+        <td>@contact.Description</td>
+    </tr>
+    }
+</table>

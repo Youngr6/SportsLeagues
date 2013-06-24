@@ -86,6 +86,7 @@
       <DependentUpon>SportsLeaguesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Dto\PlayerDto.cs" />
+    <Compile Include="PlayerP.cs" />
     <Compile Include="Season.cs">
       <DependentUpon>SportsLeaguesModel.tt</DependentUpon>
     </Compile>

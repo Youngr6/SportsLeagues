@@ -22,7 +22,12 @@ namespace SportsLeagues.Controllers
       if (User.Identity.IsAuthenticated)
       {
         LeagueIndexModel model = new LeagueIndexModel();
+        model.Username = User.Identity.Name;
+
         model.Leagues = leagueManager.GetLeagues(User.Identity.Name, null);
+
+        model.Fixtures = leagueManager.GetFixtures(User.Identity.Name, User.Identity.Name);
+
         return View(model);
       }
 

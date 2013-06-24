@@ -1,10 +1,57 @@
 ﻿@using SportsLeagues.Models
+@using SportsLeagues.Interfaces
 @model SeasonModel
 
 @{
-    ViewBag.Title = "ViewSeason";
+    ViewBag.Title = Model.Season.Description + " - " + Model.Season.League.Name;
 }
 
-<h2>@Model.Season.League.Name @Model.Season.Description</h2>
 
+<h2 style="display:inline;">@Model.Season.League.Name</h2> - <h3 class="muted" style="display:inline;">@Model.Season.Description</h3>
+
+<div class="tabbable">
+<ul class="nav nav-tabs">
+@foreach (Box box in Model.Season.Boxes.OrderBy(b => b.Number)) { 
+<li @if(box == Model.Season.Boxes.OrderBy(b => b.Number).First()){ <text>class="active"</text> }>
+    <a href="@("#box_"+box.Number)" data-toggle="tab">Box @box.Number</a>
+</li>
+}
+</ul>
+    
+    <div class="tabbable">
+        <div class="tab-content">
+            @foreach (Box box in Model.Season.Boxes.OrderBy(b => b.Number)) { 
+                <div class="tab-pane @if(box == Model.Season.Boxes.OrderBy(b=>b.Number).First()){ <text>active</text>}" id="@("box_"+box.Number)">
+                    <table class="table table-bordered">
+                        @foreach (DateTime date in box.Fixtures.Select(f => f.Date).Distinct().OrderBy(d => d)) { 
+                            <tr>
+                            <td>@date.ToShortDateString()</td>
+                            <td>
+                               <table class="table table-striped">
+                                @foreach (Fixture fix in box.Fixtures.Where(f => f.Date == date).OrderBy(f => f.Sequence)) { 
+                                    <tr>
+                                        <td>@fix.Court.Description</td>
+                                        <td>@foreach(Player p in fix.HomePlayers) {
+                                                <a href="#" data-potitle="@p.FullName" data-poload="@Url.Action("ProfilePartial", "Player", new { playerId = p.Id })">@p.FullName</a> 
+                                            }</td>
+                                        <td>@foreach(Player p in fix.AwayPlayers) {
+                                                <a href="#" data-potitle="@p.FullName" data-poload="@Url.Action("ProfilePartial", "Player", new { playerId = p.Id })">@p.FullName</a>
+                                            }</td>
+                                        <td>@fix.HomeScore - @fix.AwayScore</td>
+                                        <td>@fix.Status</td>
+                                    </tr>
+                                }
+                               </table> 
+                            </td>
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_ContactDetailsPartial")
 

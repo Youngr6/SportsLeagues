@@ -25,6 +25,7 @@ namespace SportsLeagues
       // it is NOT necessary to register your controllers
 
       container.RegisterType<ILeagueManager, LeagueManagerService>();
+      container.RegisterType<IPlayerManager, PlayerManager>();
 
       // e.g. container.RegisterType<ITestService, TestService>();    
       RegisterTypes(container);

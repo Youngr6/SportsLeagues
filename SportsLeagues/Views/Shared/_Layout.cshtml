@@ -9,16 +9,19 @@
         @Styles.Render("~/Content/css")
         @Styles.Render("~/Content/bootstrap")
         @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/jquery")
     </head>
     <body>
+
+        <div id="wrap">
 
         <div class="container">
 
           <div class="masthead">
                   <span class="pull-right">@Html.Partial("_LoginPartial")</span>
-            <h3 class="muted">Sports Leagues</h3>
+            <h3 class="muted brand">Sports Leagues</h3>
             
-            <div class="navbar">
+            <div class="navbar navbar-inverse">
               <div class="navbar-inner">
                 <div class="container">
                   <ul class="nav">
@@ -39,17 +42,15 @@
                 @RenderBody()
             </section>
         </div>
-        <footer>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p>&copy; @DateTime.Now.Year - My ASP.NET MVC Application</p>
-                </div>
-            </div>
-        </footer>
-
         </div>
 
-        @Scripts.Render("~/bundles/jquery")
+    </div>
+        <div id="footer">
+            <div class="container">
+                <p class="pull-right muted"><small>&copy; @DateTime.Now.Year - <a href="mailto:russell.young@bluepony.co.uk">Russell Young</a> - Calibre Systems Ltd</small></p>
+            </div>
+        </div>
+
         @Scripts.Render("~/bundles/bootstrap")
         @RenderSection("scripts", required: false)
     </body>

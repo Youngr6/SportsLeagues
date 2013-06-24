@@ -29,7 +29,7 @@ namespace SportsLeagues.Services
     {
       using (SportsLeaguesEntities context = new SportsLeaguesEntities())
       {
-        if(string.IsNullOrEmpty(searchText))
+        if (string.IsNullOrEmpty(searchText))
           return context.Leagues.Include("Players").Include("Seasons").OrderBy(l => l.Name).ToArray();
         return context.Leagues.Include("Players").Include("Seasons").Where(l => l.Name.ToUpper().Contains(searchText.ToUpper())).ToArray();
       }
@@ -46,6 +46,8 @@ namespace SportsLeagues.Services
           .Include("Boxes")
           .Include("Boxes.Fixtures")
           .Include("Boxes.Fixtures.Court")
+          .Include("Boxes.Fixtures.HomePlayers")
+          .Include("Boxes.Fixtures.AwayPlayers")
           .Include("LeagueConfig")
           .Include("LeagueConfig.Courts")
           .Include("League.Players").SingleOrDefault(s => s.StartDate <= today && s.EndDate >= today);
@@ -54,7 +56,7 @@ namespace SportsLeagues.Services
     }
 
 
-    public Season CalculateNewSeason(string username, Guid leagueId, DateTime startDate)
+    public Season CalculateNewSeason(string username, Guid leagueId, DateTime startDate, string seasonName)
     {
       using (SportsLeaguesEntities entities = new SportsLeaguesEntities())
       {
@@ -69,14 +71,17 @@ namespace SportsLeagues.Services
         Season season = new Season()
         {
           Id = Guid.NewGuid(),
-          LeagueConfig = new LeagueConfig() { Id = Guid.NewGuid(), BoxSize = league.LeagueConfig.BoxSize,
-             Iterations = league.LeagueConfig.Iterations,
-             MovementSize = league.LeagueConfig.MovementSize 
+          LeagueConfig = new LeagueConfig()
+          {
+            Id = Guid.NewGuid(),
+            BoxSize = league.LeagueConfig.BoxSize,
+            Iterations = league.LeagueConfig.Iterations,
+            MovementSize = league.LeagueConfig.MovementSize
           },
-          Description = startDate.Date.ToString(),
+          Description = seasonName,
           GeneratedDate = DateTime.Now,
           StartDate = startDate,
-          EndDate = startDate //todo - fix this
+          EndDate = startDate 
         };
 
         league.Seasons.Add(season);
@@ -90,7 +95,7 @@ namespace SportsLeagues.Services
         // see how many boxes we need
         // if we dont know the box size, it can be calculated as number of courts * 2 (2 being number of players)...
 
-        if(season.LeagueConfig.BoxSize == 0 && season.LeagueConfig.Courts.Count > 0)
+        if (season.LeagueConfig.BoxSize == 0 && season.LeagueConfig.Courts.Count > 0)
           season.LeagueConfig.BoxSize = season.LeagueConfig.Courts.Count * 2;
 
         int numPlayers = players.Count();
@@ -213,7 +218,7 @@ namespace SportsLeagues.Services
 
               if (!boxComplete)
               {
-                Console.WriteLine("Box incomplete - removing last fixture and trying again (" + lastFixture.ToString()+")");
+                Console.WriteLine("Box incomplete - removing last fixture and trying again (" + lastFixture.ToString() + ")");
                 box.Fixtures.Remove(lastFixture);
                 sequence--;
               }
@@ -259,7 +264,7 @@ namespace SportsLeagues.Services
         context.Courts.Add(court);
         context.SaveChanges();
         return court;
-           
+
       }
     }
 
@@ -325,10 +330,32 @@ namespace SportsLeagues.Services
 
     }
 
-
-    public Player[] GetPlayers(string username, Guid leagueId)
+    Player[] ILeagueManager.GetPlayers(string username, Guid leagueId)
     {
       throw new NotImplementedException();
+
+    }
+
+    /// <summary>
+    /// Look for all the fixtures this player has a part in
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="playerId"></param>
+    /// <returns></returns>
+    Fixture[] ILeagueManager.GetFixtures(string username, string playerUsername)
+    {
+      using (SportsLeaguesEntities context = new SportsLeaguesEntities())
+      {
+        return context.Fixtures
+          .Include("HomePlayers")
+          .Include("AwayPlayers")
+          .Include("Confirmations")
+          .Include("Court")
+          .Include("Box")
+          .Include("Box.Season")
+          .Include("Box.Season.League")
+          .Where(f => f.HomePlayers.Any(hp => string.Compare(hp.Username, playerUsername, true) == 0) || f.AwayPlayers.Any(hp => string.Compare(hp.Username, playerUsername, true) == 0)).OrderBy(f => f.Date).ToArray();
+      }
     }
   }
 }

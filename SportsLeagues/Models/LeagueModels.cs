@@ -8,7 +8,11 @@ namespace SportsLeagues.Models
 {
   public class LeagueIndexModel
   {
+    public string Username { get; set; }
+
     public ICollection<League> Leagues { get; set; }
+
+    public ICollection<Fixture> Fixtures { get; set; }
   }
 
   public class LeagueDetailModel

@@ -3,31 +3,59 @@
 @{
     ViewBag.Title = "Home Page";
 }
-@section featured {
-    <section class="featured">
-        <div class="content-wrapper">
-            <hgroup class="title">
-                <h1>Welcome to Sports Leagues</h1>
-            </hgroup>
-            <p>
-                
-            </p>
-        </div>
-    </section>
-}
-<h3>Active Leagues:</h3>
-<table class="table table-striped">
+
+<h3>My Leagues</h3>
+
+<table class="table table-striped table-hover">
     <thead>
-        <td>Name</td>
-        <td>Seasons</td>
-        <td>Players</td>
+        <tr>
+        <th>Name</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Seasons</th>
+        <th>Players</th>
+        </tr>
     </thead>
     @foreach (League league in Model.Leagues)
     {
         <tr>
             <td>@Html.ActionLink(league.Name, "ViewSeason", "Home", new { leagueId = league.Id }, null)</td>
+            <td>@league.Seasons.OrderBy(s => s.StartDate).Last().StartDate.ToShortDateString()</td>
+            <td>@league.Seasons.OrderBy(s => s.StartDate).Last().EndDate.ToShortDateString()</td>
             <td>@league.Seasons.Count</td>
             <td>@league.Players.Count</td>
         </tr>
     }
 </table>
+
+<h3>My Fixtures</h3>
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Court</th>
+            <th>vs</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+@foreach (Fixture fix in Model.Fixtures) { 
+<tr>
+    <td>@fix.Date.ToShortDateString()</td>
+    <td>@fix.Court.Description</td>
+    <td>@foreach (Player p in fix.HomePlayers.Where(f => string.Compare(f.Username, Model.Username, true) != 0))
+        {
+            <a href="#" data-potitle="@p.FullName" data-poload="@Url.Action("ProfilePartial", "Player", new { playerId = p.Id })">@p.FullName</a> 
+        }
+        @foreach (Player p in fix.AwayPlayers.Where(f => string.Compare(f.Username, Model.Username, true) != 0))
+        {
+            <a href="#" data-potitle="@p.FullName" data-poload="@Url.Action("ProfilePartial", "Player", new { playerId = p.Id })">@p.FullName</a>
+        }</td>
+    <td>@fix.Status</td>
+    <td></td>
+</tr>    
+}
+</table>
+
+@Html.Partial("_ContactDetailsPartial")
